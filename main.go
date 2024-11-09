@@ -16,6 +16,7 @@ var systems = map[string]string{
 	"engines":          "ENG-04",
 	"deflector_shield": "SHLD-05",
 }
+var damagedSystem string
 
 func main() {
 	app := fiber.New()
@@ -27,7 +28,7 @@ func main() {
 		for key := range systems {
 			keys = append(keys, key)
 		}
-		damagedSystem := keys[r.Intn(len(keys))]
+		damagedSystem = keys[r.Intn(len(keys))]
 
 		response := fiber.Map{
 			"damaged_system": damagedSystem,
@@ -37,7 +38,7 @@ func main() {
 
 	// Ruta GET /repair-bay
 	app.Get("/repair-bay", func(c *fiber.Ctx) error {
-		damagedSystem := c.Query("system", "navigation") // Obtiene el sistema averiado desde la query
+		damagedSystem := c.Query("system", damagedSystem) // Obtiene el sistema averiado desde la query
 		code, exists := systems[damagedSystem]
 		if !exists {
 			code = "UNKNOWN"
